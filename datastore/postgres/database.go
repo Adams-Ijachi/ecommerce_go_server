@@ -9,20 +9,20 @@ import (
 )
 
 type Client struct {
-	db *gorm.DB
+	DB *gorm.DB
 }
 
-func NewClient(connection config.Configuration) (*Client, error) {
+func NewClient(connection config.Configuration) *Client {
 
 	db, err := gorm.Open(postgres.Open(connection.DatabaseURL.Url), &gorm.Config{})
 
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
 	log.Println("Connected to a database")
 
 	return &Client{
-		db: db,
-	}, nil
+		DB: db,
+	}
 }

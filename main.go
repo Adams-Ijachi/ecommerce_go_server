@@ -7,13 +7,12 @@ import (
 
 	"log"
 
+	"github.com/gin-contrib/secure"
 	"github.com/gin-gonic/gin"
 )
 
-//TODO connect to db postgres
-// TODO: create a .env file
-// TODO: create a router
-// TODO: create a request header check
+//TODO Create a models for db
+// TODO: Create Services for db
 
 func main() {
 
@@ -32,6 +31,20 @@ func main() {
 	router.Use(config.Cors())
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+	router.Use(secure.New(secure.Config{
+		// AllowedHosts:          []string{"example.com", "ssl.example.com"},
+		// SSLRedirect:           true,
+		// SSLHost:               "ssl.example.com",
+		STSSeconds:            315360000,
+		STSIncludeSubdomains:  true,
+		FrameDeny:             true,
+		ContentTypeNosniff:    true,
+		BrowserXssFilter:      true,
+		ContentSecurityPolicy: "default-src 'self'",
+		IENoOpen:              true,
+		ReferrerPolicy:        "strict-origin-when-cross-origin",
+		SSLProxyHeaders:       map[string]string{"X-Forwarded-Proto": "https"},
+	}))
 
 	routes.InitializeAllRoutes(router)
 
