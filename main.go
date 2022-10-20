@@ -2,17 +2,15 @@ package main
 
 import (
 	"ecom/config"
+	"ecom/controllers"
+
 	pg "ecom/datastore/postgres"
 	"ecom/routes"
-
 	"log"
 
 	"github.com/gin-contrib/secure"
 	"github.com/gin-gonic/gin"
 )
-
-//TODO Create a models for db
-// TODO: Create Services for db
 
 func main() {
 
@@ -25,7 +23,9 @@ func main() {
 
 	log.Println("Connecting to a database")
 
-	pg.NewClient(*configuration)
+	database := pg.NewClient(*configuration)
+
+	authController := controllers.NewAuthController(database)
 
 	router := gin.New()
 	router.Use(config.Cors())
@@ -46,7 +46,7 @@ func main() {
 		SSLProxyHeaders:       map[string]string{"X-Forwarded-Proto": "https"},
 	}))
 
-	routes.InitializeAllRoutes(router)
+	routes.InitializeAllRoutes(router, authController)
 
 	router.Run()
 

@@ -1,12 +1,24 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"ecom/controllers"
 
-func InitializeAllRoutes(r *gin.Engine) {
+	"github.com/gin-gonic/gin"
+)
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "ping",
-		})
-	})
+func InitializeAllRoutes(
+	router *gin.Engine,
+	authController *controllers.UserAuthController,
+
+) {
+
+	routeV1 := router.Group("/api/v1")
+
+	userAuth := routeV1.Group("/auth")
+
+	userAuth.Use()
+	{
+		userAuth.POST("/register", authController.RegisterUser())
+	}
+
 }

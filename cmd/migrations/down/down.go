@@ -26,8 +26,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	client.DB.AutoMigrate(&core.User{})
+	client.DB.Migrator().DropTable(&core.User{}, &core.UserProfile{})
 
-	log.Println("Migration completed")
+	log.Println("Dropping completed")
 
 }
